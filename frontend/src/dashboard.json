@@ -1,0 +1,360 @@
+  {
+    "treadmills": [
+      {
+        "id": "1",
+        "name": "Esteira A",
+        "selectedPeriod": "Dia",
+        "status": "Ativa",
+        "data": {
+          "Dia": [
+            {
+              "title": "Páginas feitas",
+              "value": "8472",
+              "percent": 35,
+              "color": "success"
+            },
+            {
+              "title": "Tempo em funcionamento",
+              "value": "3 horas",
+              "percent": 12,
+              "color": "warning"
+            },
+            {
+              "title": "Funcionado, sem contagem",
+              "value": "5 horas",
+              "percent": 85,
+              "color": "danger"
+            },
+            {
+              "title": "Folhas perdidas",
+              "value": "3498",
+              "percent": 23,
+              "color": "danger"
+            },
+            {}
+          ],
+          "Mes": [
+            {
+              "title": "Páginas feitas",
+              "value": "53218",
+              "percent": 42,
+              "color": "success"
+            },
+            {
+              "title": "Tempo em funcionamento",
+              "value": "489 horas",
+              "percent": 38,
+              "color": "info"
+            },
+            {
+              "title": "Funcionado, sem contagem",
+              "value": "40 horas",
+              "percent": 14,
+              "color": "danger"
+            },
+            {
+              "title": "Folhas perdidas",
+              "value": "3498",
+              "percent": 23,
+              "color": "danger"
+            },
+            {}
+          ],
+          "Ano": [
+            {
+              "title": "Páginas feitas",
+              "value": "8547238947",
+              "percent": 38,
+              "color": "success"
+            },
+            {
+              "title": "Tempo em funcionamento",
+              "value": "14896 horas",
+              "percent": 42,
+              "color": "info"
+            },
+            {
+              "title": "Funcionado, sem contagem",
+              "value": "510 horas",
+              "percent": 78,
+              "color": "danger"
+            },
+            {
+              "title": "Folhas perdidas",
+              "value": "3498",
+              "percent": 23,
+              "color": "danger"
+            },
+            {}
+          ]
+        }
+      },
+      {
+        "id": "2",
+        "name": "Esteira B",
+        "status": "Ativa",
+        "selectedPeriod": "Dia",
+        "data": {
+          "Dia": [
+            {
+              "title": "Páginas feitas",
+              "value": "9321",
+              "percent": 45,
+              "color": "success"
+            },
+            {
+              "title": "Tempo em funcionamento",
+              "value": "2 horas",
+              "percent": 9,
+              "color": "warning"
+            },
+            {
+              "title": "Funcionado, sem contagem",
+              "value": "3 horas",
+              "percent": 72,
+              "color": "danger"
+            },
+            {
+              "title": "Folhas perdidas",
+              "value": "3498",
+              "percent": 23,
+              "color": "danger"
+            },
+            {}
+          ],
+          "Mes": [
+            {
+              "title": "Páginas feitas",
+              "value": "58976",
+              "percent": 47,
+              "color": "success"
+            },
+            {
+              "title": "Tempo em funcionamento",
+              "value": "512 horas",
+              "percent": 41,
+              "color": "info"
+            },
+            {
+              "title": "Funcionado, sem contagem",
+              "value": "36 horas",
+              "percent": 10,
+              "color": "danger"
+            },
+            {
+              "title": "Folhas perdidas",
+              "value": "3498",
+              "percent": 23,
+              "color": "danger"
+            },
+            {}
+          ],
+          "Ano": [
+            {
+              "title": "Páginas feitas",
+              "value": "9245678291",
+              "percent": 42,
+              "color": "success"
+            },
+            {
+              "title": "Tempo em funcionamento",
+              "value": "15382 horas",
+              "percent": 39,
+              "color": "info"
+            },
+            {
+              "title": "Funcionado, sem contagem",
+              "value": "462 horas",
+              "percent": 87,
+              "color": "danger"
+            },
+            {
+              "title": "Folhas perdidas",
+              "value": "3498",
+              "percent": 23,
+              "color": "danger"
+            },
+            {}
+          ]
+        }
+      },
+      {
+        "id": "3",
+        "name": "Esteira C",
+        "status": "Inativa",
+        "selectedPeriod": "Dia",
+        "data": {
+          "Dia": [
+            {
+              "title": "Páginas feitas",
+              "value": "7845",
+              "percent": 30,
+              "color": "success"
+            },
+            {
+              "title": "Tempo em funcionamento",
+              "value": "4 horas",
+              "percent": 18,
+              "color": "warning"
+            },
+            {
+              "title": "Funcionado, sem contagem",
+              "value": "6 horas",
+              "percent": 80,
+              "color": "danger"
+            },
+            {
+              "title": "Folhas perdidas",
+              "value": "3498",
+              "percent": 23,
+              "color": "danger"
+            },
+            {}
+          ],
+          "Mes": [
+            {
+              "title": "Páginas feitas",
+              "value": "47125",
+              "percent": 38,
+              "color": "success"
+            },
+            {
+              "title": "Tempo em funcionamento",
+              "value": "460 horas",
+              "percent": 36,
+              "color": "info"
+            },
+            {
+              "title": "Funcionado, sem contagem",
+              "value": "39 horas",
+              "percent": 12,
+              "color": "danger"
+            },
+            {
+              "title": "Folhas perdidas",
+              "value": "3498",
+              "percent": 23,
+              "color": "danger"
+            },
+            {}
+          ],
+          "Ano": [
+            {
+              "title": "Páginas feitas",
+              "value": "8654983212",
+              "percent": 37,
+              "color": "success"
+            },
+            {
+              "title": "Tempo em funcionamento",
+              "value": "14025 horas",
+              "percent": 40,
+              "color": "info"
+            },
+            {
+              "title": "Funcionado, sem contagem",
+              "value": "520 horas",
+              "percent": 75,
+              "color": "danger"
+            },
+            {
+              "title": "Folhas perdidas",
+              "value": "3498",
+              "percent": 23,
+              "color": "danger"
+            },
+            {}
+          ]
+        }
+      },
+      {
+        "id": "4",
+        "name": "Esteira D",
+        "status": "Inativa",
+        "selectedPeriod": "Dia",
+        "data": {
+          "Dia": [
+            {
+              "title": "Páginas feitas",
+              "value": "7500",
+              "percent": 32,
+              "color": "success"
+            },
+            {
+              "title": "Tempo em funcionamento",
+              "value": "5 horas",
+              "percent": 15,
+              "color": "warning"
+            },
+            {
+              "title": "Funcionado, sem contagem",
+              "value": "4 horas",
+              "percent": 70,
+              "color": "danger"
+            },
+            {
+              "title": "Folhas perdidas",
+              "value": "3498",
+              "percent": 23,
+              "color": "danger"
+            },
+            {}
+          ],
+          "Mes": [
+            {
+              "title": "Páginas feitas",
+              "value": "50000",
+              "percent": 41,
+              "color": "success"
+            },
+            {
+              "title": "Tempo em funcionamento",
+              "value": "470 horas",
+              "percent": 37,
+              "color": "info"
+            },
+            {
+              "title": "Funcionado, sem contagem",
+              "value": "35 horas",
+              "percent": 12,
+              "color": "danger"
+            },
+            {
+              "title": "Folhas perdidas",
+              "value": "3498",
+              "percent": 23,
+              "color": "danger"
+            },
+            {}
+          ],
+          "Ano": [
+            {
+              "title": "Páginas feitas",
+              "value": "8600000000",
+              "percent": 40,
+              "color": "success"
+            },
+            {
+              "title": "Tempo em funcionamento",
+              "value": "14000 horas",
+              "percent": 41,
+              "color": "info"
+            },
+            {
+              "title": "Funcionado, sem contagem",
+              "value": "500 horas",
+              "percent": 80,
+              "color": "danger"
+            },
+            {
+              "title": "Folhas perdidas",
+              "value": "3498",
+              "percent": 23,
+              "color": "danger"
+            },
+            {}
+          ]
+        }
+      }
+    ]
+  }
