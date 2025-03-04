@@ -24,3 +24,17 @@ export const createMachine = async (
         return { data: null, error: error.message };
     }
 };
+
+export const listMachines = async (): Promise<{ data: Machine[] | null; error: PostgrestError | null }> => {
+    try {
+        const { data, error } = await supabase.from("machines").select("*");
+
+        if (error) {
+            return { data: null, error };
+        }
+
+        return { data, error: null };
+    } catch (error: any) {
+        return { data: null, error: error.message };
+    }
+};
