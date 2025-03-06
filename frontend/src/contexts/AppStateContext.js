@@ -4,6 +4,7 @@ const DEFAULT_VALUE = {
   appState: {
     isLoading: false,
     error: null,
+    success: null
   },
   setAppState: () => {},
 };

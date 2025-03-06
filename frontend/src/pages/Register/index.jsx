@@ -18,6 +18,8 @@ import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { AppStateContext } from "../../contexts";
 
+import endpoints from "../../app/endpoints";
+
 const Register = () => {
   const [isPwdVisible, setIsPwdVisible] = React.useState(false);
   const [isPwdRepeatVisible, setIsPwdRepeatVisible] = React.useState(false);
@@ -34,14 +36,45 @@ const Register = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  console.log(errors);
 
   const onSubmit = React.useCallback(
     async (values) => {
+      if (values.password !== values.password_repeat) {
+        appStateCtx.setAppState(null, "A senha e a repetição não coincidem!");
+        return;
+      }
       appStateCtx.setAppState(true);
+      const options = {
+        method: "POST",
+        body: JSON.stringify({
+          name: values.name,
+          email: values.email,
+          password: values.password,
+        }),
+      };
 
-      navigate("/"); // Navega pro login
-      appStateCtx.setAppState(false);
+      try {
+        const res = await fetch(endpoints.users.register, options);
+        const body = await res.json();
+
+        if (res.ok) {
+          navigate("/"); // Navega pro login
+          appStateCtx.setAppState(false, null, body.message);
+        } else if (body) {
+          appStateCtx.setAppState(false, body.message);
+        } else {
+          appStateCtx.setAppState(
+            false,
+            "Não foi possível registar o usuário, tente novamente!"
+          );
+        }
+      } catch (err) {
+        console.error(err);
+        appStateCtx.setAppState(
+          false,
+          "Não foi possível registar o usuário, tente novamente!"
+        );
+      }
 
       return;
     },
@@ -61,7 +94,7 @@ const Register = () => {
                   <p className="text-body-secondary">Crie um novo usuário</p>
                   <Controller
                     control={control}
-                    name="user"
+                    name="name"
                     rules={{
                       required: {
                         value: true,
@@ -77,9 +110,9 @@ const Register = () => {
                           {...field}
                           placeholder="Usuário"
                           autoComplete="username"
-                          invalid={Boolean(errors.user)}
+                          invalid={Boolean(errors.name)}
                           feedbackInvalid={
-                            errors.user ? errors.user.message : null
+                            errors.name ? errors.name.message : null
                           }
                         />
                       </CInputGroup>

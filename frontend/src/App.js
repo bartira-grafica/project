@@ -1,4 +1,4 @@
-import { Loader, Error } from "./components";
+import { Loader, Error, Success } from "./components";
 
 import { useState } from "react";
 
@@ -14,6 +14,7 @@ import "./App.css";
 const DEFAULT_APP_STATE = {
   isLoading: false,
   error: null,
+  success: null,
 };
 
 const DEFAULT_SIDEBAR_STATE = {
@@ -24,11 +25,16 @@ function App() {
   const [appState, setAppState] = useState(DEFAULT_APP_STATE);
   const [sidebarState, setSidebarState] = useState(DEFAULT_SIDEBAR_STATE);
 
-  const handleAppStateChange = (isLoading = false, error = null) => {
+  const handleAppStateChange = (
+    isLoading = false,
+    error = null,
+    success = null
+  ) => {
     setAppState((prevAppState) => ({
       ...prevAppState,
       isLoading,
       error,
+      success,
     }));
   };
 
@@ -49,6 +55,7 @@ function App() {
         <BrowserRouter>
           {appState.isLoading && <Loader />}
           {!appState.isLoading && appState.error && <Error />}
+          {!appState.isLoading && appState.success && <Success />}
           <AppRoutes />
         </BrowserRouter>
       </SidebarStateContext.Provider>

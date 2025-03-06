@@ -20,6 +20,8 @@ import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { AppStateContext } from "../../contexts";
 
+import endpoints from "../../app/endpoints";
+
 const Login = () => {
   const [isPwdVisible, setIsPwdVisible] = React.useState(false);
   const appStateCtx = React.useContext(AppStateContext);
@@ -38,8 +40,39 @@ const Login = () => {
     async (values) => {
       if (Object.values(values).every((d) => d)) {
         appStateCtx.setAppState(true);
-        navigate("/dashboard");
-        appStateCtx.setAppState(false);
+        const options = {
+          method: "POST",
+          body: JSON.stringify({
+            email: values.email,
+            password: values.password,
+          }),
+        };
+
+        try {
+          const res = await fetch(endpoints.users.login, options);
+          const body = await res.json();
+
+          if (res.ok) {
+            //#region Armazenar dados da sessão
+            localStorage.setItem("user", JSON.stringify(body.user));
+            localStorage.setItem("token", body.token);
+            //#endregion
+            appStateCtx.setAppState(false);
+            navigate("/dashboard");
+          } else if (body) {
+            appStateCtx.setAppState(false, body.message);
+          } else {
+            appStateCtx.setAppState(
+              false,
+              "Não foi possível realizar o login, tente novamente!"
+            );
+          }
+        } catch (err) {
+          appStateCtx.setAppState(
+            false,
+            "Não foi possível realizar o login, tente novamente!"
+          );
+        }
 
         return;
       }
