@@ -46,10 +46,14 @@ const Register = () => {
       appStateCtx.setAppState(true);
       const options = {
         method: "POST",
+        headers: new Headers({
+          "Content-Type": "application/json",
+        }),
         body: JSON.stringify({
           name: values.name,
           email: values.email,
           password: values.password,
+          role: "R",
         }),
       };
 
@@ -205,15 +209,22 @@ const Register = () => {
                       </CInputGroup>
                     )}
                   ></Controller>
-                  <div className="d-grid">
-                    <CButton
-                      color="primary"
-                      type="submit"
-                      disabled={appStateCtx.appState.isLoading}
-                    >
-                      Criar conta
-                    </CButton>
-                  </div>
+                  <CRow>
+                    <CCol xs={6}>
+                      <CButton
+                        color="primary"
+                        type="submit"
+                        disabled={appStateCtx.appState.isLoading}
+                      >
+                        Criar conta
+                      </CButton>
+                    </CCol>
+                    <CCol xs={6} className="text-right">
+                      <CButton color="link" href="/" className="px-0">
+                        Voltar pro login
+                      </CButton>
+                    </CCol>
+                  </CRow>
                 </CForm>
               </CCardBody>
             </CCard>

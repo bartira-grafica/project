@@ -14,7 +14,7 @@ import {
   CRow,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { cilLockLocked, cilLockUnlocked, cilUser } from "@coreui/icons";
+import { cilLockLocked, cilLockUnlocked } from "@coreui/icons";
 
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
@@ -42,6 +42,9 @@ const Login = () => {
         appStateCtx.setAppState(true);
         const options = {
           method: "POST",
+          headers: new Headers({
+            "Content-Type": "application/json",
+          }),
           body: JSON.stringify({
             email: values.email,
             password: values.password,
@@ -98,7 +101,7 @@ const Login = () => {
                     </p>
                     <Controller
                       control={control}
-                      name="user"
+                      name="email"
                       rules={{
                         required: {
                           value: true,
@@ -107,16 +110,15 @@ const Login = () => {
                       }}
                       render={({ field }) => (
                         <CInputGroup className="mb-3">
-                          <CInputGroupText>
-                            <CIcon icon={cilUser} />
-                          </CInputGroupText>
+                          <CInputGroupText>@</CInputGroupText>
                           <CFormInput
                             {...field}
-                            placeholder="Usuário"
-                            autoComplete="username"
-                            invalid={Boolean(errors.user)}
+                            placeholder="Email"
+                            autoComplete="email"
+                            type="email"
+                            invalid={Boolean(errors.email)}
                             feedbackInvalid={
-                              errors.user ? errors.user.message : null
+                              errors.email ? errors.email.message : null
                             }
                           />
                         </CInputGroup>
@@ -165,16 +167,6 @@ const Login = () => {
                           disabled={appStateCtx.appState.isLoading}
                         >
                           Entrar
-                        </CButton>
-                      </CCol>
-                      <CCol xs={3} className="text-right">
-                        <CButton
-                          color="link"
-                          href="#"
-                          className="px-0"
-                          onClick={() => alert("foda-se")}
-                        >
-                          Esqueceu a senha?
                         </CButton>
                       </CCol>
                       <CCol xs={3} className="text-right">

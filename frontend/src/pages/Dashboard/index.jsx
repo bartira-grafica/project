@@ -23,17 +23,6 @@ import {
 
 import dataList from "../../dashboard.json";
 
-//#region Gerencia a alteração do período de uma esteira
-const handleTrdmPeriodChange = (setData, selectedPeriod, id) => {
-  setData((d) => ({
-    ...d,
-    treadmills: d.treadmills.map((t) =>
-      t.id === id ? { ...t, selectedPeriod } : t
-    ),
-  }));
-};
-//#endregion
-
 const Dashboard = () => {
   const [data, setData] = React.useState(dataList);
 
@@ -70,7 +59,8 @@ const Dashboard = () => {
             {data.treadmills.map((t) => {
               if (
                 treadmillsFilter === "Todas" ||
-                t.status === treadmillsFilter.substring(0, treadmillsFilter.length - 1)
+                t.status ===
+                  treadmillsFilter.substring(0, treadmillsFilter.length - 1)
               ) {
                 return (
                   <CCard className="mb-4" key={t.id}>
@@ -80,23 +70,6 @@ const Dashboard = () => {
                           <h4 id="traffic" className="card-title mb-0">
                             {t.name}
                           </h4>
-                        </CCol>
-                        <CCol sm={7} className="d-none d-md-block">
-                          <CButtonGroup className="float-end me-3">
-                            {["Dia", "Mes", "Ano"].map((value) => (
-                              <CButton
-                                color="outline-secondary"
-                                key={value}
-                                className="mx-0"
-                                active={value === t.selectedPeriod}
-                                onClick={() =>
-                                  handleTrdmPeriodChange(setData, value, t.id)
-                                }
-                              >
-                                {value}
-                              </CButton>
-                            ))}
-                          </CButtonGroup>
                         </CCol>
                       </CRow>
                     </CCardBody>
@@ -108,7 +81,7 @@ const Dashboard = () => {
                         xl={{ cols: 5 }}
                         className="mb-2 text-center"
                       >
-                        {t.data[t.selectedPeriod].map((item, index, items) => (
+                        {t.data.map((item, index, items) => (
                           <CCol
                             className={classNames({
                               "d-none d-xl-block": index + 1 === items.length,
