@@ -34,13 +34,15 @@ client.on("message", async (topic: string, message: Buffer) => {
 
   const id_esteira = payload.id_esteira || "default_esteira_id"; // Obter o id_esteira do payload
 
-  const { contador, timestamp } = payload;
-  
+  const { timestamp } = payload;
+
   try {
     switch (topic) {
       case MQTT_TOPIC_CONTAGEM:
         // Tópico de contagem de páginas
-        await upsertMachineData(id_esteira, timestamp, contador, null, null, false);
+        const contagem = payload["contagem"];
+        console.log("contagem: ", contagem);
+        await upsertMachineData(id_esteira, timestamp, contagem, null, null, false);
         break;
 
       case MQTT_TOPIC_FOLHAS_HORA:
@@ -72,23 +74,25 @@ client.on("message", async (topic: string, message: Buffer) => {
 // Função para atualizar ou inserir dados na tabela `machines`
 async function upsertMachineData(
   machineId: string,
-  timestamp: string | null,
+  timestamp: number | null, // Mantemos o tipo como número
   totalCount: number | null,
   pagesLastHour: number | null,
   uptime: number | null,
   noDetection: boolean | null
 ) {
   try {
-    const { data, error } = await supabase.from("machines").upsert([
-      {
-        machine_id: machineId,  // Usando o ID da esteira
-        timestamp: timestamp || null,  // Se não houver timestamp, será null
-        total_count: totalCount || null,  // Se não houver contador, será null
-        pages_last_hour: pagesLastHour || null,  // Se não houver páginas por hora, será null
-        uptime: uptime || null,  // Se não houver tempo de funcionamento, será null
-        no_detection: noDetection || false,  // Se não houver detecção, será false
-      },
-    ]);
+    // Verifica se o timestamp é válido (caso contrário, define como null)
+    const formattedTimestamp = timestamp !== null ? timestamp : null;
+
+    // Executa o upsert na tabela "machines"
+    const { data, error } = await supabase.from("machines").upsert([{
+      machine_id: machineId,
+      timestamp: formattedTimestamp, // Insere o timestamp como número
+      total_count: totalCount || null,
+      pages_last_hour: pagesLastHour || null,
+      uptime: uptime || null,
+      no_detection: noDetection || false,
+    }]);
 
     if (error) {
       console.error("Erro ao salvar os dados no banco:", error);
@@ -99,6 +103,7 @@ async function upsertMachineData(
     console.error("❌ Erro ao salvar os dados no banco:", err);
   }
 }
+
 
 // Exporta a função para ser utilizada em outro arquivo
 module.exports = client;
