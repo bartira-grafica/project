@@ -22,6 +22,15 @@ export const registerUser = async (
 
     try {
         const pwdEncrypted = await bcrypt.hash(password, 10);
+        const { data: user, error } = await userRepository.getUserByEmail(
+            email
+        );
+
+        if(user){
+            res.status(400).json({ message: "Este email já esta cadastrado." });
+            return;
+        }
+        
         const newUser = await userRepository.createUser({
             name,
             email,
