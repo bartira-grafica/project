@@ -3,8 +3,6 @@ import classNames from "classnames";
 
 import {
   CContainer,
-  CButton,
-  CButtonGroup,
   CCard,
   CCardBody,
   CCardFooter,
@@ -43,13 +41,22 @@ const Dashboard = () => {
                 {treadmillsFilter}
               </CDropdownToggle>
               <CDropdownMenu>
-                <CDropdownItem onClick={() => setTreadmillsFilter("Todas")}>
+                <CDropdownItem
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setTreadmillsFilter("Todas")}
+                >
                   Todas
                 </CDropdownItem>
-                <CDropdownItem onClick={() => setTreadmillsFilter("Ativas")}>
+                <CDropdownItem
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setTreadmillsFilter("Ativas")}
+                >
                   Ativas
                 </CDropdownItem>
-                <CDropdownItem onClick={() => setTreadmillsFilter("Inativas")}>
+                <CDropdownItem
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setTreadmillsFilter("Inativas")}
+                >
                   Inativas
                 </CDropdownItem>
               </CDropdownMenu>

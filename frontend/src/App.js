@@ -4,7 +4,11 @@ import { useState } from "react";
 
 import { BrowserRouter } from "react-router";
 
-import { AppStateContext, SidebarStateContext } from "./contexts";
+import {
+  AppStateContext,
+  MachinesContext,
+  SidebarStateContext,
+} from "./contexts";
 
 import AppRoutes from "./routes";
 
@@ -21,9 +25,12 @@ const DEFAULT_SIDEBAR_STATE = {
   isOpen: true,
 };
 
+const DEFAULT_MACHINES = [];
+
 function App() {
   const [appState, setAppState] = useState(DEFAULT_APP_STATE);
   const [sidebarState, setSidebarState] = useState(DEFAULT_SIDEBAR_STATE);
+  const [machines, setMachines] = useState(DEFAULT_MACHINES);
 
   const handleAppStateChange = (
     isLoading = false,
@@ -46,20 +53,22 @@ function App() {
   };
 
   return (
-    <AppStateContext.Provider
-      value={{ appState, setAppState: handleAppStateChange }}
-    >
-      <SidebarStateContext.Provider
-        value={{ sidebarState, setSidebarState: handleSidebarStateChange }}
+    <MachinesContext.Provider value={{ machines, setMachines }}>
+      <AppStateContext.Provider
+        value={{ appState, setAppState: handleAppStateChange }}
       >
-        <BrowserRouter>
-          {appState.isLoading && <Loader />}
-          {!appState.isLoading && appState.error && <Error />}
-          {!appState.isLoading && appState.success && <Success />}
-          <AppRoutes />
-        </BrowserRouter>
-      </SidebarStateContext.Provider>
-    </AppStateContext.Provider>
+        <SidebarStateContext.Provider
+          value={{ sidebarState, setSidebarState: handleSidebarStateChange }}
+        >
+          <BrowserRouter>
+            {appState.isLoading && <Loader />}
+            {!appState.isLoading && appState.error && <Error />}
+            {!appState.isLoading && appState.success && <Success />}
+            <AppRoutes />
+          </BrowserRouter>
+        </SidebarStateContext.Provider>
+      </AppStateContext.Provider>
+    </MachinesContext.Provider>
   );
 }
 

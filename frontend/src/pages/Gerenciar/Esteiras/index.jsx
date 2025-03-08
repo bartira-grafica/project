@@ -16,9 +16,7 @@ import CIcon from "@coreui/icons-react";
 import { cilMagnifyingGlass, cilPen } from "@coreui/icons";
 
 import { Controller, useForm } from "react-hook-form";
-import { AppStateContext } from "../../../contexts";
-
-import esteiras from "../../../esteiras.json";
+import { AppStateContext, MachinesContext } from "../../../contexts";
 
 const SCREEN_STATES = {
   Add: 1,
@@ -29,10 +27,10 @@ const SCREEN_STATES = {
 const GerenciarEsteiras = () => {
   const [screenState, setScreenState] = React.useState(SCREEN_STATES.Search);
   const appStateCtx = React.useContext(AppStateContext);
+  const { machines } = React.useContext(MachinesContext);
 
   const handleAskToEdit = (esteira) => {
-    setValue("id", esteira.id);
-    setValue("name", esteira.name);
+    setValue("id", esteira.machine_id);
     setScreenState(SCREEN_STATES.Edit);
   };
 
@@ -42,16 +40,10 @@ const GerenciarEsteiras = () => {
     formState: { errors },
     setValue,
     clearErrors,
+    watch,
   } = useForm();
 
-  React.useEffect(() => {
-    if (screenState === SCREEN_STATES.Search) {
-      clearErrors();
-      setValue("id", null);
-      setValue("name", null);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [screenState]);
+  const { search } = watch();
 
   const onSubmit = React.useCallback(
     async (values) => {
@@ -65,6 +57,15 @@ const GerenciarEsteiras = () => {
     []
   );
 
+  React.useEffect(() => {
+    if (screenState === SCREEN_STATES.Search) {
+      clearErrors();
+      setValue("id", null);
+      setValue("name", null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [screenState]);
+
   if (screenState === SCREEN_STATES.Search) {
     return (
       <div className="bg-body-tertiary min-vh-100 d-flex flex-column">
@@ -77,13 +78,23 @@ const GerenciarEsteiras = () => {
                 </h1>
               </div>
               <CInputGroup className="input-prepend">
-                <CInputGroupText>
-                  <CIcon icon={cilMagnifyingGlass} />
-                </CInputGroupText>
-                <CFormInput
-                  type="text"
-                  placeholder="Pesquise pelo nome ou ID da esteira..."
-                />
+                <Controller
+                  control={control}
+                  name="search"
+                  render={({ field }) => (
+                    <>
+                      <CInputGroupText>
+                        <CIcon icon={cilMagnifyingGlass} />
+                      </CInputGroupText>
+                      <CFormInput
+                        {...field}
+                        type="text"
+                        placeholder="Pesquise pelo ID da esteira..."
+                        autoComplete="search"
+                      />
+                    </>
+                  )}
+                ></Controller>
                 <CButton
                   color="secondary"
                   onClick={() => setScreenState(SCREEN_STATES.Add)}
@@ -95,26 +106,34 @@ const GerenciarEsteiras = () => {
           </CRow>
         </CContainer>
         <div className="w-100 mt-5 m-auto" style={{ maxWidth: "1200px" }}>
-          {esteiras.map((e) => (
-            <CCard className="mb-4" key={e.id}>
-              <CCardBody>
-                <CRow>
-                  <CCol sm={11}>
-                    <h4 className="card-title mb-0">{e.name}</h4>
-                  </CCol>
-                  <CCol sm={1}>
-                    <CButton onClick={() => handleAskToEdit(e)}>
-                      <CIcon icon={cilPen} />
-                    </CButton>
-                  </CCol>
-                </CRow>
-                <CRow>
-                  <CCol sm={12}>{e.id}</CCol>
-                </CRow>
-              </CCardBody>
-              <CCardFooter>Esteira cadastrada em {e.created_at}</CCardFooter>
-            </CCard>
-          ))}
+          {machines
+            .filter((m) => !search || m.machine_id.includes(search))
+            .map((e) => (
+              <CCard className="mb-4" key={e.machine_id}>
+                <CCardBody>
+                  <CRow>
+                    <CCol sm={11}>
+                      <h4 className="card-title mb-0">
+                        Esteira ID: {e.machine_id}
+                      </h4>
+                    </CCol>
+                    <CCol sm={1}>
+                      <CButton onClick={() => handleAskToEdit(e)}>
+                        <CIcon icon={cilPen} />
+                      </CButton>
+                    </CCol>
+                  </CRow>
+                  <CRow>
+                    <CCol sm={12}>
+                      Total páginas contadas {Number(e.total_count)}
+                    </CCol>
+                  </CRow>
+                </CCardBody>
+                <CCardFooter>
+                  {e.no_detection ? "Inativa" : "Ativa"}
+                </CCardFooter>
+              </CCard>
+            ))}
         </div>
       </div>
     );
@@ -161,7 +180,7 @@ const GerenciarEsteiras = () => {
                       </CInputGroup>
                     )}
                   ></Controller>
-                  <Controller
+                  {/* <Controller
                     control={control}
                     name="name"
                     rules={{
@@ -180,7 +199,7 @@ const GerenciarEsteiras = () => {
                         />
                       </CInputGroup>
                     )}
-                  ></Controller>
+                  ></Controller> */}
                   <div className="d-grid">
                     <CButton
                       color="primary"
