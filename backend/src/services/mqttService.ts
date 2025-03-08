@@ -34,11 +34,12 @@ client.on("message", async (topic: string, message: Buffer) => {
 
   const id_esteira = payload.id_esteira || "default_esteira_id"; // Obter o id_esteira do payload
 
+  const { contador, timestamp } = payload;
+  
   try {
     switch (topic) {
       case MQTT_TOPIC_CONTAGEM:
         // Tópico de contagem de páginas
-        const { contador, timestamp } = payload;
         await upsertMachineData(id_esteira, timestamp, contador, null, null, false);
         break;
 
