@@ -4,6 +4,7 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import userRoutes from "../routes/userRoutes";
 import machinesRoutes from "../routes/machinesRoutes";
 import * as mqttService from "../services/mqttService"; // Importando o mqttService
+import cors from "cors"; // Importando o pacote CORS
 
 dotenv.config();
 
@@ -16,6 +17,9 @@ const supabaseKey: string = process.env.SUPABASE_KEY || "";
 
 // Inicializando o cliente do Supabase diretamente aqui
 const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey);
+
+// Middleware para CORS
+app.use(cors()); // Ativando o CORS para todas as rotas
 
 app.use(express.json()); // Middleware para parsear JSON
 app.use("/users", userRoutes); // Define o prefixo de rota para usuários
