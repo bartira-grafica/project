@@ -90,7 +90,11 @@ const Dashboard = () => {
                       <CRow>
                         <CCol sm={5}>
                           <h4 id="traffic" className="card-title mb-0">
-                            {t.machine_id}
+                            {t.machine_id} (
+                            {t.no_detection === true || t.no_detection === null
+                              ? "Inativa"
+                              : "Ativa"}
+                            )
                           </h4>
                         </CCol>
                       </CRow>
@@ -141,7 +145,6 @@ const Dashboard = () => {
                             value={percentUptime}
                           />
                         </CCol>
-
                         <CCol></CCol>
                       </CRow>
                     </CCardFooter>
