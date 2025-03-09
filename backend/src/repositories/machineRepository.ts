@@ -25,6 +25,38 @@ export const createMachine = async (
     }
 };
 
+export const updateMachineId = async (
+    prevMachineId: string,
+    machineId: string
+): Promise<{ data: any; error: PostgrestError | null }> => {
+    try {
+        const { data, error } = await supabase
+            .from("machines")
+            .update({ machine_id: machineId })
+            .eq("machine_id", prevMachineId);
+
+        return { data, error };
+    } catch (error: any) {
+        return { data: null, error: error.message };
+    }
+};
+
+export const deleteMachine = async (
+    machineId: string
+): Promise<{ data: any; error: PostgrestError | null }> => {
+    try {
+        const { data, error } = await supabase
+            .from("machines")
+            .delete()
+            .eq("machine_id", machineId);
+
+        return { data, error };
+    } catch (error: any) {
+        return { data: null, error: error.message };
+    }
+};
+
+
 export const listMachines = async (): Promise<{ data: Machine[] | null; error: PostgrestError | null }> => {
     try {
         const { data, error } = await supabase.from("machines").select("*");

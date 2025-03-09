@@ -47,6 +47,88 @@ export const registerMachine = async (
     }
 };
 
+// Função para atualizar o machine_id de uma máquina
+export const updateMachineId = async (
+    req: Request,
+    res: Response
+): Promise<void> => {
+    const { machine_id, prev_machine_id } = req.body;
+
+    // Verifica se o machine_id foi enviado
+    if (!machine_id) {
+        res.status(400).json({ message: "O campo 'machine_id' é obrigatório." });
+        return;
+    }
+
+    if (!prev_machine_id) {
+        res.status(400).json({ message: "O campo 'prev_machine_id' é obrigatório." });
+        return;
+    }
+
+    try {
+        // Atualiza o registro de máquina
+        const updatedMachine = await machineRepository.updateMachineId(prev_machine_id, machine_id);
+
+        // Verifica se houve erro ao atualizar o registro
+        if (updatedMachine.error) {
+            res.status(400).json({
+                message: "Erro ao atualizar máquina.",
+                error: updatedMachine.error,
+            });
+            return;
+        }
+
+        // Retorna a resposta de sucesso
+        res.status(201).json({
+            message: "Máquina atualizada com sucesso.",
+            machine: updatedMachine.data,
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            message: "Erro interno no servidor.",
+            error: error.message,
+        });
+    }
+};
+
+// Função para deletar uma máquina
+export const deleteMachineId = async (
+    req: Request,
+    res: Response
+): Promise<void> => {
+    const { machine_id } = req.params;
+
+    // Verifica se o machine_id foi enviado
+    if (!machine_id) {
+        res.status(400).json({ message: "O campo 'machine_id' é obrigatório." });
+        return;
+    }
+    try {
+        // Deleta o registro de máquina
+        const deleteddMachine = await machineRepository.deleteMachine(machine_id);
+
+        // Verifica se houve erro ao deletar o registro
+        if (deleteddMachine.error) {
+            res.status(400).json({
+                message: "Erro ao deletar máquina.",
+                error: deleteddMachine.error,
+            });
+            return;
+        }
+
+        // Retorna a resposta de sucesso
+        res.status(201).json({
+            message: "Máquina deletada com sucesso.",
+            machine: deleteddMachine.data,
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            message: "Erro interno no servidor.",
+            error: error.message,
+        });
+    }
+};
+
 export const listMachines = async (
     req: Request,
     res: Response
