@@ -18,6 +18,9 @@ import { cilMagnifyingGlass, cilPen } from "@coreui/icons";
 import { Controller, useForm } from "react-hook-form";
 import { AppStateContext, MachinesContext } from "../../../contexts";
 
+import { fetchMachines } from "../../../utils";
+import endpoints from "../../../app/endpoints";
+
 const SCREEN_STATES = {
   Add: 1,
   Search: 2,
@@ -27,10 +30,10 @@ const SCREEN_STATES = {
 const GerenciarEsteiras = () => {
   const [screenState, setScreenState] = React.useState(SCREEN_STATES.Search);
   const appStateCtx = React.useContext(AppStateContext);
-  const { machines } = React.useContext(MachinesContext);
+  const { machines, setMachines } = React.useContext(MachinesContext);
 
   const handleAskToEdit = (esteira) => {
-    setValue("id", esteira.machine_id);
+    setValue("machine_id", esteira.machine_id);
     setScreenState(SCREEN_STATES.Edit);
   };
 
@@ -44,31 +47,66 @@ const GerenciarEsteiras = () => {
   } = useForm();
 
   const { search } = watch();
-
+  console.log(screenState);
   const onSubmit = React.useCallback(
     async (values) => {
       appStateCtx.setAppState(true);
-      setScreenState(SCREEN_STATES.Search);
-      appStateCtx.setAppState(false);
+      const token = localStorage.getItem("token");
+
+      const options = {
+        method: screenState === SCREEN_STATES.Add ? "POST" : "PUT",
+        headers: new Headers({
+          "Content-Type": "application/json",
+          authorization: "Bearer " + token,
+        }),
+        body: JSON.stringify({
+          ...values,
+        }),
+      };
+
+      try {
+        const res = await fetch(
+          screenState === SCREEN_STATES.Add ? endpoints.machines.register : "",
+          options
+        );
+        const body = await res.json();
+
+        if (res.ok) {
+          setScreenState(SCREEN_STATES.Search);
+          fetchMachines(token, setMachines, appStateCtx.setAppState);
+        } else if (body.message) {
+          appStateCtx.setAppState(false, body.message);
+        } else {
+          appStateCtx.setAppState(
+            false,
+            "Não foi possível salvar as alterações, tente novamente."
+          );
+        }
+      } catch (err) {
+        console.error(err);
+        appStateCtx.setAppState(
+          false,
+          "Não foi possível salvar as alterações, tente novamente."
+        );
+      }
 
       return;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [screenState]
   );
 
   React.useEffect(() => {
     if (screenState === SCREEN_STATES.Search) {
       clearErrors();
-      setValue("id", null);
-      setValue("name", null);
+      setValue("machine_id", null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [screenState]);
 
   if (screenState === SCREEN_STATES.Search) {
     return (
-      <div className="bg-body-tertiary min-vh-100 d-flex flex-column">
+      <div className="bg-body-tertiary min-vh-100 d-flex flex-column px-5">
         <CContainer>
           <CRow className="justify-content-center">
             <CCol md={6}>
@@ -89,7 +127,7 @@ const GerenciarEsteiras = () => {
                       <CFormInput
                         {...field}
                         type="text"
-                        placeholder="Pesquise pelo ID da esteira..."
+                        placeholder="Pesquise pelo ID"
                         autoComplete="search"
                       />
                     </>
@@ -97,6 +135,7 @@ const GerenciarEsteiras = () => {
                 ></Controller>
                 <CButton
                   color="secondary"
+                  type="button"
                   onClick={() => setScreenState(SCREEN_STATES.Add)}
                 >
                   Adicionar
@@ -118,7 +157,7 @@ const GerenciarEsteiras = () => {
                       </h4>
                     </CCol>
                     <CCol sm={1}>
-                      <CButton onClick={() => handleAskToEdit(e)}>
+                      <CButton type="button" onClick={() => handleAskToEdit(e)}>
                         <CIcon icon={cilPen} />
                       </CButton>
                     </CCol>
@@ -152,6 +191,7 @@ const GerenciarEsteiras = () => {
                   </p>
                   <CCol xs={3} className="w-100 text-end">
                     <CButton
+                      type="button"
                       color="link"
                       className="mb-2"
                       onClick={() => setScreenState(SCREEN_STATES.Search)}
@@ -161,7 +201,7 @@ const GerenciarEsteiras = () => {
                   </CCol>
                   <Controller
                     control={control}
-                    name="id"
+                    name="machine_id"
                     rules={{
                       required: {
                         value: true,
@@ -173,9 +213,11 @@ const GerenciarEsteiras = () => {
                         <CFormInput
                           {...field}
                           placeholder="Identificação"
-                          autoComplete="id"
-                          invalid={Boolean(errors.id)}
-                          feedbackInvalid={errors.id ? errors.id.message : null}
+                          autoComplete="machine_id"
+                          invalid={Boolean(errors.machine_id)}
+                          feedbackInvalid={
+                            errors.machine_id ? errors.machine_id.message : null
+                          }
                         />
                       </CInputGroup>
                     )}

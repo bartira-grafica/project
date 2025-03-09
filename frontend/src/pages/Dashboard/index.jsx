@@ -19,12 +19,13 @@ import {
   CDropdownToggle,
 } from "@coreui/react";
 
-import dataList from "../../dashboard.json";
+import { MachinesContext } from "../../contexts";
+
+import { calculateTime } from "../../utils";
 
 const Dashboard = () => {
-  const [data, setData] = React.useState(dataList);
-
-  const [treadmillsFilter, setTreadmillsFilter] = React.useState("Todas"); // Todas, Ativas, Inativas
+  const [machinesFilter, setMachinesFilter] = React.useState("Todas"); // Todas, Ativas, Inativas
+  const { machines } = React.useContext(MachinesContext);
 
   return (
     <CContainer style={{ padding: "0 20px" }}>
@@ -38,24 +39,24 @@ const Dashboard = () => {
           <CAccordionBody>
             <CDropdown>
               <CDropdownToggle color="secondary">
-                {treadmillsFilter}
+                {machinesFilter}
               </CDropdownToggle>
               <CDropdownMenu>
                 <CDropdownItem
                   style={{ cursor: "pointer" }}
-                  onClick={() => setTreadmillsFilter("Todas")}
+                  onClick={() => setMachinesFilter("Todas")}
                 >
                   Todas
                 </CDropdownItem>
                 <CDropdownItem
                   style={{ cursor: "pointer" }}
-                  onClick={() => setTreadmillsFilter("Ativas")}
+                  onClick={() => setMachinesFilter("Ativas")}
                 >
                   Ativas
                 </CDropdownItem>
                 <CDropdownItem
                   style={{ cursor: "pointer" }}
-                  onClick={() => setTreadmillsFilter("Inativas")}
+                  onClick={() => setMachinesFilter("Inativas")}
                 >
                   Inativas
                 </CDropdownItem>
@@ -63,19 +64,33 @@ const Dashboard = () => {
             </CDropdown>
             <br />
             <br />
-            {data.treadmills.map((t) => {
+            {machines.map((t) => {
               if (
-                treadmillsFilter === "Todas" ||
-                t.status ===
-                  treadmillsFilter.substring(0, treadmillsFilter.length - 1)
+                machinesFilter === "Todas" ||
+                (machinesFilter === "Ativas" && t.no_detection === false) ||
+                (machinesFilter === "Inativas" &&
+                  (t.no_detection === true || t.no_detection === null))
               ) {
+                const percentTotalCount =
+                  (Number(t.total_count) /
+                    machines
+                      .map((m) => m.total_count)
+                      .reduce((acc, v) => acc + Number(v))) *
+                  100;
+                const percentUptime =
+                  (Number(t.uptime) /
+                    machines
+                      .map((m) => m.uptime)
+                      .reduce((acc, v) => acc + Number(v))) *
+                  100;
+
                 return (
-                  <CCard className="mb-4" key={t.id}>
+                  <CCard className="mb-4" key={t.machine_id}>
                     <CCardBody>
                       <CRow>
                         <CCol sm={5}>
                           <h4 id="traffic" className="card-title mb-0">
-                            {t.name}
+                            {t.machine_id}
                           </h4>
                         </CCol>
                       </CRow>
@@ -88,27 +103,46 @@ const Dashboard = () => {
                         xl={{ cols: 5 }}
                         className="mb-2 text-center"
                       >
-                        {t.data.map((item, index, items) => (
-                          <CCol
-                            className={classNames({
-                              "d-none d-xl-block": index + 1 === items.length,
-                            })}
-                            key={index}
-                          >
-                            <div className="text-body-secondary">
-                              {item.title}
-                            </div>
-                            <div className="fw-semibold text-truncate">
-                              {item.value} ({item.percent}%)
-                            </div>
-                            <CProgress
-                              thin
-                              className="mt-2"
-                              color={item.color}
-                              value={item.percent}
-                            />
-                          </CCol>
-                        ))}
+                        <CCol
+                          className={classNames({
+                            "d-none d-xl-block": false,
+                          })}
+                        >
+                          <div className="text-body-secondary">
+                            Páginas feitas
+                          </div>
+                          <div className="fw-semibold text-truncate">
+                            {Number(t.total_count)} ({percentTotalCount}
+                            %)
+                          </div>
+                          <CProgress
+                            thin
+                            className="mt-2"
+                            color="success"
+                            value={percentTotalCount}
+                          />
+                        </CCol>
+                        <CCol
+                          className={classNames({
+                            "d-none d-xl-block": false,
+                          })}
+                        >
+                          <div className="text-body-secondary">
+                            Tempo em funcionamento
+                          </div>
+                          <div className="fw-semibold text-truncate">
+                            {calculateTime(Number(t.uptime))} ({percentUptime}
+                            %)
+                          </div>
+                          <CProgress
+                            thin
+                            className="mt-2"
+                            color="info"
+                            value={percentUptime}
+                          />
+                        </CCol>
+
+                        <CCol></CCol>
                       </CRow>
                     </CCardFooter>
                   </CCard>

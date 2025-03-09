@@ -28,7 +28,8 @@
             "value": "3498",
             "percent": 23,
             "color": "danger"
-          }
+          },
+          {}
         ]
       },
       {
@@ -59,7 +60,8 @@
             "value": "3498",
             "percent": 23,
             "color": "danger"
-          }
+          },
+          {}
         ]
       },
       {
@@ -90,7 +92,8 @@
             "value": "3498",
             "percent": 23,
             "color": "danger"
-          }
+          },
+          {}
         ]
       },
       {
@@ -121,7 +124,8 @@
             "value": "3498",
             "percent": 23,
             "color": "danger"
-          }
+          },
+          {}
         ]
       }
     ]
