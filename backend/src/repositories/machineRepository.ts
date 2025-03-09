@@ -1,25 +1,22 @@
-import { PostgrestError } from "@supabase/supabase-js";
-import { supabase } from "../server"; // Cliente Supabase
-import { Machine } from "../types/machineTypes"; // Tipo para os dados da máquina
+import { db } from "../server";
+import { Machine } from "../types/machineTypes";
 
-// Função para criar uma nova máquina no Supabase
 export const createMachine = async (
     machineData: Machine
-): Promise<{ data: any; error: PostgrestError | null }> => {
+): Promise<{ data: any; error: string | null }> => {
     try {
-        // Agora, a função insere os dados na tabela 'machines' de acordo com a estrutura de MachineStatus
-        const { data, error } = await supabase.from("machines").insert([
-            {
-                machine_id: machineData.machine_id,
-                timestamp: machineData.timestamp,
-                total_count: machineData.total_count,
-                pages_last_hour: machineData.pages_last_hour,
-                uptime: machineData.uptime,
-                no_detection: machineData.no_detection,
-            },
-        ]);
+        const query = `INSERT INTO machines (machine_id, timestamp, total_count, pages_last_hour, uptime, no_detection) VALUES (?, ?, ?, ?, ?, ?)`;
+        const values = [
+            machineData.machine_id,
+            machineData.timestamp,
+            machineData.total_count,
+            machineData.pages_last_hour,
+            machineData.uptime,
+            machineData.no_detection,
+        ];
 
-        return { data, error };
+        const [result] = await db.execute(query, values);
+        return { data: result, error: null };
     } catch (error: any) {
         return { data: null, error: error.message };
     }
@@ -28,14 +25,11 @@ export const createMachine = async (
 export const updateMachineId = async (
     prevMachineId: string,
     machineId: string
-): Promise<{ data: any; error: PostgrestError | null }> => {
+): Promise<{ data: any; error: string | null }> => {
     try {
-        const { data, error } = await supabase
-            .from("machines")
-            .update({ machine_id: machineId })
-            .eq("machine_id", prevMachineId);
-
-        return { data, error };
+        const query = `UPDATE machines SET machine_id = ? WHERE machine_id = ?`;
+        const [result] = await db.execute(query, [machineId, prevMachineId]);
+        return { data: result, error: null };
     } catch (error: any) {
         return { data: null, error: error.message };
     }
@@ -43,29 +37,21 @@ export const updateMachineId = async (
 
 export const deleteMachine = async (
     machineId: string
-): Promise<{ data: any; error: PostgrestError | null }> => {
+): Promise<{ data: any; error: string | null }> => {
     try {
-        const { data, error } = await supabase
-            .from("machines")
-            .delete()
-            .eq("machine_id", machineId);
-
-        return { data, error };
+        const query = `DELETE FROM machines WHERE machine_id = ?`;
+        const [result] = await db.execute(query, [machineId]);
+        return { data: result, error: null };
     } catch (error: any) {
         return { data: null, error: error.message };
     }
 };
 
-
-export const listMachines = async (): Promise<{ data: Machine[] | null; error: PostgrestError | null }> => {
+export const listMachines = async (): Promise<{ data: Machine[] | null; error: string | null }> => {
     try {
-        const { data, error } = await supabase.from("machines").select("*");
-
-        if (error) {
-            return { data: null, error };
-        }
-
-        return { data, error: null };
+        const query = `SELECT * FROM machines`;
+        const [rows] = await db.execute(query);
+        return { data: rows as Machine[], error: null };
     } catch (error: any) {
         return { data: null, error: error.message };
     }

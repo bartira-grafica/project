@@ -35,7 +35,7 @@ export const registerUser = async (
             name,
             email,
             password: pwdEncrypted,
-            role,
+            role: role ?? "R",
         });
 
         if (newUser.error) {

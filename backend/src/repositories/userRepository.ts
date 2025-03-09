@@ -1,49 +1,40 @@
-import { PostgrestError } from "@supabase/supabase-js";
-import { supabase } from "../server"; // Agora você importa corretamente o cliente Supabase
-import { User } from "../types/userTypes"; // Sugestão: criar um tipo `User` para os dados do usuário
+import { RowDataPacket } from "mysql2";
+import { db } from "../server";
+import { User } from "../types/userTypes";
 
-// Função para criar um novo usuário no Supabase
-export const createUser = async (
-    userData: User
-): Promise<{ data: any; error: PostgrestError | null }> => {
+// Função para criar um novo usuário no MySQL
+export const createUser = async (userData: User) => {
     try {
-        // Agora, o cliente do Supabase já está disponível diretamente
-        const { data, error } = await supabase.from("users").insert([
-            {
-                name: userData.name,
-                email: userData.email,
-                password: userData.password,
-                role: userData.role,
-            },
+        const query = `INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)`;
+        const [result] = await db.execute(query, [
+            userData.name,
+            userData.email,
+            userData.password,
+            userData.role,
         ]);
-
-        return { data, error };
+        return { data: result, error: null };
     } catch (error: any) {
         return { data: null, error: error.message };
     }
 };
 
+// Função para listar todos os usuários
 export const listUsers = async () => {
     try {
-        const { data, error } = await supabase
-            .from("users")
-            .select("*");
-
-        return { data, error };
+        const query = `SELECT * FROM users`;
+        const [data] = await db.execute<RowDataPacket[]>(query);
+        return { data, error: null };
     } catch (error: any) {
         return { data: null, error: error.message };
     }
-}
+};
 
+// Função para obter um usuário pelo email
 export const getUserByEmail = async (email: string) => {
     try {
-        const { data, error } = await supabase
-            .from("users")
-            .select("id, email, password, role") // Seleciona os campos necessários
-            .eq("email", email)
-            .single(); // Garante que retorna apenas um usuário
-
-        return { data, error };
+        const query = `SELECT id, email, password, role FROM users WHERE email = ? LIMIT 1`;
+        const [data] = await db.execute<RowDataPacket[]>(query, [email]);
+        return { data: data.length ? data[0] : null, error: null };
     } catch (error: any) {
         return { data: null, error: error.message };
     }
