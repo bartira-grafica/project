@@ -1,0 +1,79 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "Teste MQTT",
+    "collectionId": "d0244c91-74cf-41cd-b1f0-6c88d1ac5930",
+    "dateExported": "2025-03-09T21:44:46.528Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "f2954eca-b47f-467b-a867-fd7f207711d2",
+            "colId": "d0244c91-74cf-41cd-b1f0-6c88d1ac5930",
+            "containerId": "",
+            "name": "Teste Contagem",
+            "url": "http://localhost:3001/send-contagem",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2025-03-09T21:36:29.104Z",
+            "modified": "2025-03-09T21:36:29.104Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"machineId\": \"abc123\",\n  \"contagem\": \"12\",\n  \"timestamp\": \"3253245\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "a88e700c-314c-4914-84ac-cdb45cc60177",
+            "colId": "d0244c91-74cf-41cd-b1f0-6c88d1ac5930",
+            "containerId": "",
+            "name": "Teste Contagem Ult Hora",
+            "url": "http://localhost:3001/send-folhas-hora",
+            "method": "POST",
+            "sortNum": 15000,
+            "created": "2025-03-09T21:41:30.201Z",
+            "modified": "2025-03-09T21:43:32.887Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"machineId\": \"abc123\",\n  \"folhasHora\": \"132452\",\n  \"timestamp\": \"3253245\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "a834b55e-6133-4591-8609-2028b19a38a2",
+            "colId": "d0244c91-74cf-41cd-b1f0-6c88d1ac5930",
+            "containerId": "",
+            "name": "Teste Uptime",
+            "url": "http://localhost:3001/send-tempo-funcionamento",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2025-03-09T21:39:26.754Z",
+            "modified": "2025-03-09T21:40:01.938Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"machineId\": \"abc123\",\n  \"tempoFuncionamento\": \"3600\",\n  \"timestamp\": \"3253245\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "8c8b4f6a-bf06-4c44-bfdd-02e47f97361d",
+            "colId": "d0244c91-74cf-41cd-b1f0-6c88d1ac5930",
+            "containerId": "",
+            "name": "Teste No_detection",
+            "url": "http://localhost:3001/send-deteccao",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2025-03-09T21:41:26.972Z",
+            "modified": "2025-03-09T21:42:39.033Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"machineId\": \"abc123\",\n  \"semDeteccao\": false,\n  \"timestamp\": \"3253245\"\n}",
+                "form": []
+            }
+        }
+    ],
+    "ref": "7aFMUlueWDe6WdjRogyXamWlT0Ga4jGnXGGSSzTAfarpKmQyIx2XJwYdz0f9lGqP6s18bqz_mguv2FsC3tdPIA"
+}
