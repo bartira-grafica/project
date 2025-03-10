@@ -17,15 +17,23 @@ import {
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
+  CButton,
 } from "@coreui/react";
 
-import { MachinesContext } from "../../contexts";
+import { AppStateContext, MachinesContext } from "../../contexts";
 
-import { calculateTime } from "../../utils";
+import { calculateTime, fetchMachines } from "../../utils";
 
 const Dashboard = () => {
   const [machinesFilter, setMachinesFilter] = React.useState("Todas"); // Todas, Ativas, Inativas
-  const { machines } = React.useContext(MachinesContext);
+  const { machines, setMachines } = React.useContext(MachinesContext);
+  const { setAppState } = React.useContext(AppStateContext);
+
+  const handleRefresh = () => {
+    const token = localStorage.getItem("token");
+
+    fetchMachines(token, setMachines, setAppState);
+  };
 
   return (
     <CContainer style={{ padding: "0 20px" }}>
@@ -62,6 +70,14 @@ const Dashboard = () => {
                 </CDropdownItem>
               </CDropdownMenu>
             </CDropdown>
+            <CButton
+              color="info"
+              style={{ color: "#fff", marginLeft: 10 }}
+              type="button"
+              onClick={handleRefresh}
+            >
+              Atualizar
+            </CButton>
             <br />
             <br />
             {machines.map((t) => {
@@ -74,14 +90,20 @@ const Dashboard = () => {
                 const percentTotalCount =
                   (Number(t.total_count) /
                     machines
-                      .map((m) => m.total_count)
-                      .reduce((acc, v) => acc + Number(v))) *
+                      .map((m) => Number(m.total_count))
+                      .reduce((acc, v) => acc + v)) *
                   100;
                 const percentUptime =
                   (Number(t.uptime) /
                     machines
-                      .map((m) => m.uptime)
-                      .reduce((acc, v) => acc + Number(v))) *
+                      .map((m) => Number(m.uptime))
+                      .reduce((acc, v) => acc + v)) *
+                  100;
+                const percentPagesLastHour =
+                  (Number(t.pages_last_hour) /
+                    machines
+                      .map((m) => Number(m.pages_last_hour))
+                      .reduce((acc, v) => acc + v)) *
                   100;
 
                 return (
@@ -116,14 +138,17 @@ const Dashboard = () => {
                             Páginas feitas
                           </div>
                           <div className="fw-semibold text-truncate">
-                            {Number(t.total_count)} ({percentTotalCount}
+                            {Number(t.total_count)} (
+                            {isNaN(percentTotalCount) ? 0 : percentTotalCount}
                             %)
                           </div>
                           <CProgress
                             thin
                             className="mt-2"
                             color="success"
-                            value={percentTotalCount}
+                            value={
+                              isNaN(percentTotalCount) ? 0 : percentTotalCount
+                            }
                           />
                         </CCol>
                         <CCol
@@ -135,14 +160,35 @@ const Dashboard = () => {
                             Tempo em funcionamento
                           </div>
                           <div className="fw-semibold text-truncate">
-                            {calculateTime(Number(t.uptime))} ({percentUptime}
+                            {calculateTime(Number(t.uptime))} (
+                            {isNaN(percentUptime) ? 0 : percentUptime}
                             %)
                           </div>
                           <CProgress
                             thin
                             className="mt-2"
                             color="info"
-                            value={percentUptime}
+                            value={isNaN(percentUptime) ? 0 : percentUptime}
+                          />
+                        </CCol>
+                        <CCol
+                          className={classNames({
+                            "d-none d-xl-block": false,
+                          })}
+                        >
+                          <div className="text-body-secondary">
+                            Páginas Ultima Hora
+                          </div>
+                          <div className="fw-semibold text-truncate">
+                            {Number(t.pages_last_hour)} (
+                            {isNaN(percentPagesLastHour) ? 0 : percentPagesLastHour}
+                            %)
+                          </div>
+                          <CProgress
+                            thin
+                            className="mt-2"
+                            color="primary"
+                            value={isNaN(percentPagesLastHour) ? 0 : percentPagesLastHour}
                           />
                         </CCol>
                         <CCol></CCol>

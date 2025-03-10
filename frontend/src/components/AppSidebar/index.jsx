@@ -27,9 +27,6 @@ const AppSidebar = () => {
       position="fixed"
       unfoldable={false}
       visible={sidebarStateCtx.sidebarState.isOpen}
-      //   onVisibleChange={(visible) => {
-      //     dispatch({ type: "set", sidebarShow: visible });
-      //   }}
     >
       <CSidebarHeader className="border-bottom">
         <CSidebarBrand to="/">
