@@ -139,7 +139,7 @@ const Dashboard = () => {
                           </div>
                           <div className="fw-semibold text-truncate">
                             {Number(t.total_count)} (
-                            {isNaN(percentTotalCount) ? 0 : percentTotalCount}
+                            {isNaN(percentTotalCount) ? 0 : percentTotalCount.toFixed(2)}
                             %)
                           </div>
                           <CProgress
@@ -161,7 +161,7 @@ const Dashboard = () => {
                           </div>
                           <div className="fw-semibold text-truncate">
                             {calculateTime(Number(t.uptime))} (
-                            {isNaN(percentUptime) ? 0 : percentUptime}
+                            {isNaN(percentUptime) ? 0 : percentUptime.toFixed(2)}
                             %)
                           </div>
                           <CProgress
@@ -181,7 +181,7 @@ const Dashboard = () => {
                           </div>
                           <div className="fw-semibold text-truncate">
                             {Number(t.pages_last_hour)} (
-                            {isNaN(percentPagesLastHour) ? 0 : percentPagesLastHour}
+                            {isNaN(percentPagesLastHour) ? 0 : percentPagesLastHour.toFixed(2)}
                             %)
                           </div>
                           <CProgress
