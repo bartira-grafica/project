@@ -81,11 +81,12 @@ const Dashboard = () => {
             <br />
             <br />
             {machines.map((t) => {
+              debugger;
               if (
                 machinesFilter === "Todas" ||
-                (machinesFilter === "Ativas" && t.no_detection === false) ||
+                (machinesFilter === "Ativas" && (Boolean(t.no_detection) === false && t.no_detection !== null)) ||
                 (machinesFilter === "Inativas" &&
-                  (t.no_detection === true || t.no_detection === null))
+                  (Boolean(t.no_detection) === true || t.no_detection === null))
               ) {
                 const percentTotalCount =
                   (Number(t.total_count) /
@@ -113,7 +114,7 @@ const Dashboard = () => {
                         <CCol sm={5}>
                           <h4 id="traffic" className="card-title mb-0">
                             {t.machine_id} (
-                            {t.no_detection === true || t.no_detection === null
+                            {Boolean(t.no_detection) === true || t.no_detection === null
                               ? "Inativa"
                               : "Ativa"}
                             )
