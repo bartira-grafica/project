@@ -13,18 +13,30 @@ const port: number = parseInt(process.env.PORT || "3000", 10);
 
 // Configuração do MySQL
 const db = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
-// Middleware para CORS
-app.use(cors()); // Ativando o CORS para todas as rotas
+const allowedOrigins = ["http://localhost:3000", "https://front-bartira.vercel.app"];
 
+// Middleware para CORS
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Você não tem autorização para acessar esta API."));
+      }
+    },
+    credentials: true, // Permite cookies ou cabeçalhos de autenticação na requisição caso necessário
+  })
+); // Ativando o CORS para todas as rotas
 app.use(express.json()); // Middleware para parsear JSON
 app.use("/users", userRoutes); // Define o prefixo de rota para usuários
 app.use("/machines", machinesRoutes); // Define o prefixo de rota para máquinas
