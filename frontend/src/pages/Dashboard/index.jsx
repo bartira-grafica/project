@@ -81,7 +81,6 @@ const Dashboard = () => {
             <br />
             <br />
             {machines.map((t) => {
-              debugger;
               if (
                 machinesFilter === "Todas" ||
                 (machinesFilter === "Ativas" && (Boolean(t.no_detection) === false && t.no_detection !== null)) ||

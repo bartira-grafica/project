@@ -13,7 +13,7 @@ import {
   CInputGroupText,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { cilMagnifyingGlass, cilPen } from "@coreui/icons";
+import { cilMagnifyingGlass, cilPen, cilTrash } from "@coreui/icons";
 
 import { Controller, useForm } from "react-hook-form";
 import { AppStateContext, MachinesContext } from "../../../contexts";
@@ -27,6 +27,44 @@ const SCREEN_STATES = {
   Edit: 3,
 };
 
+const handleDeleteEsteira = async (esteira, appStateCtx, setMachines) => {
+  appStateCtx.setAppState(true);
+  const token = localStorage.getItem("token");
+
+  const options = {
+    method: "POST",
+    headers: new Headers({
+      "Content-Type": "application/json",
+      authorization: "Bearer " + token,
+    }),
+  };
+
+  try {
+    const res = await fetch(
+      endpoints.machines.delete.replace("{}", esteira.machine_id),
+      options
+    );
+    const body = await res.json();
+
+    if (res.ok) {
+      fetchMachines(token, setMachines, appStateCtx.setAppState);
+    } else if (body.message) {
+      appStateCtx.setAppState(false, body.message);
+    } else {
+      appStateCtx.setAppState(
+        false,
+        "Não foi possível salvar as alterações, tente novamente."
+      );
+    }
+  } catch (err) {
+    console.error(err);
+    appStateCtx.setAppState(
+      false,
+      "Não foi possível salvar as alterações, tente novamente."
+    );
+  }
+};
+
 const GerenciarEsteiras = () => {
   const [screenState, setScreenState] = React.useState(SCREEN_STATES.Search);
   const appStateCtx = React.useContext(AppStateContext);
@@ -34,6 +72,7 @@ const GerenciarEsteiras = () => {
 
   const handleAskToEdit = (esteira) => {
     setValue("machine_id", esteira.machine_id);
+    setValue("prev_machine_id", esteira.machine_id);
     setScreenState(SCREEN_STATES.Edit);
   };
 
@@ -47,14 +86,14 @@ const GerenciarEsteiras = () => {
   } = useForm();
 
   const { search } = watch();
-  console.log(screenState);
+
   const onSubmit = React.useCallback(
     async (values) => {
       appStateCtx.setAppState(true);
       const token = localStorage.getItem("token");
 
       const options = {
-        method: screenState === SCREEN_STATES.Add ? "POST" : "PUT",
+        method: "POST",
         headers: new Headers({
           "Content-Type": "application/json",
           authorization: "Bearer " + token,
@@ -66,7 +105,9 @@ const GerenciarEsteiras = () => {
 
       try {
         const res = await fetch(
-          screenState === SCREEN_STATES.Add ? endpoints.machines.register : "",
+          screenState === SCREEN_STATES.Add
+            ? endpoints.machines.register
+            : endpoints.machines.update,
           options
         );
         const body = await res.json();
@@ -100,6 +141,7 @@ const GerenciarEsteiras = () => {
     if (screenState === SCREEN_STATES.Search) {
       clearErrors();
       setValue("machine_id", null);
+      setValue("prev_machine_id", null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [screenState]);
@@ -151,14 +193,25 @@ const GerenciarEsteiras = () => {
               <CCard className="mb-4" key={e.machine_id}>
                 <CCardBody>
                   <CRow>
-                    <CCol sm={11}>
+                    <CCol sm={10}>
                       <h4 className="card-title mb-0">
                         Esteira ID: {e.machine_id}
                       </h4>
                     </CCol>
-                    <CCol sm={1}>
+                    <CCol
+                      sm={2}
+                      style={{ display: "flex", justifyContent: "flex-end" }}
+                    >
                       <CButton type="button" onClick={() => handleAskToEdit(e)}>
                         <CIcon icon={cilPen} />
+                      </CButton>
+                      <CButton
+                        type="button"
+                        onClick={() =>
+                          handleDeleteEsteira(e, appStateCtx, setMachines)
+                        }
+                      >
+                        <CIcon icon={cilTrash} style={{ color: "red" }} />
                       </CButton>
                     </CCol>
                   </CRow>
@@ -185,9 +238,16 @@ const GerenciarEsteiras = () => {
             <CCard className="mx-4">
               <CCardBody className="p-4">
                 <CForm onSubmit={handleSubmit(onSubmit)}>
-                  <h1>Registrar esteira</h1>
+                  <h1>
+                    {SCREEN_STATES.Add === screenState
+                      ? "Registrar"
+                      : "Atualizar"}{" "}
+                    esteira
+                  </h1>
                   <p className="text-body-secondary">
-                    Cadastre aqui uma nova esteira!
+                    {SCREEN_STATES.Add === screenState
+                      ? "Cadastre aqui uma nova esteira!"
+                      : "Atualize aqui a esteira!"}
                   </p>
                   <CCol xs={3} className="w-100 text-end">
                     <CButton
@@ -248,7 +308,9 @@ const GerenciarEsteiras = () => {
                       type="submit"
                       disabled={appStateCtx.appState.isLoading}
                     >
-                      Registrar
+                      {SCREEN_STATES.Add === screenState
+                        ? "Registrar"
+                        : "Atualizar"}
                     </CButton>
                   </div>
                 </CForm>
